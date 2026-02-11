@@ -1,3 +1,12 @@
+---
+title: SecureOrder MCP
+emoji: 📦
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+---
+
 # SecureOrder-Pro MCP Server 🚀
 
 An industrial-grade Model Context Protocol (MCP) server for secure inventory management and order processing.
