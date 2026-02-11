@@ -1,20 +1,21 @@
-FROM python:3.11-slim
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
+# Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Create a non-root user for Hugging Face security (User 1000)
+RUN useradd -m -u 1000 user
+USER user
+ENV PATH="/home/user/.local/bin:$PATH"
 
-# Install Python requirements first (Logic: Optimization)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy project files and change ownership
+COPY --chown=user:user . .
 
-# Copy the rest of the app
-COPY . .
+# Install dependencies using uv
+RUN uv sync --frozen
 
-# Hugging Face Spaces and most cloud providers use 7860
+# Expose port for Hugging Face
 EXPOSE 7860
 
-CMD ["python", "app.py"]
+# Run the MCP server
+CMD ["uv", "run", "app.py"]
