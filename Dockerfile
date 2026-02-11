@@ -1,21 +1,27 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-# Set the working directory
+# 1. Set the working directory
 WORKDIR /app
 
-# Create a non-root user for Hugging Face security (User 1000)
+# 2. Copy the configuration files FIRST (Efficiency Logic)
+COPY pyproject.toml uv.lock ./
+
+# 3. Install dependencies as ROOT (to ensure success)
+# --no-install-project tells uv to just get the libraries ready
+RUN uv sync --no-install-project --no-dev
+
+# 4. Create the restricted user for Hugging Face security
 RUN useradd -m -u 1000 user
+
+# 5. Copy the rest of the application and set ownership
+COPY --chown=user:user . .
+
+# 6. Switch to the non-root user
 USER user
 ENV PATH="/home/user/.local/bin:$PATH"
 
-# Copy project files and change ownership
-COPY --chown=user:user . .
-
-# Install dependencies using uv
-RUN uv sync
-
-# Expose port for Hugging Face
+# 7. Expose the port
 EXPOSE 7860
 
-# Run the MCP server
+# 8. Run the app
 CMD ["uv", "run", "app.py"]
