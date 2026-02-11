@@ -12,7 +12,7 @@ ENV PATH="/home/user/.local/bin:$PATH"
 COPY --chown=user:user . .
 
 # Install dependencies using uv
-RUN uv sync --frozen
+RUN uv sync
 
 # Expose port for Hugging Face
 EXPOSE 7860
