@@ -31,5 +31,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://AhtishamIjaz:$HF_TOKEN@huggingface.co/spaces/AhtishamIjaz/secureorder-mcp-server
+          git remote add hf https://shamiimuhammad:$HF_TOKEN@huggingface.co/spaces/shamiimuhammad/secureorder-mcp
           git push --force hf main
